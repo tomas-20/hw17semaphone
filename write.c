@@ -2,6 +2,7 @@
 #include <sys/ipc.h>
 #include <sys/types.h>
 #include <string.h>
+#include <fcntl.h>
 #include <stdio.h>
 
 int main() {
@@ -10,5 +11,9 @@ int main() {
   printf("the last line was:\n%syou are adding:\n", shm);
   fgets(shm, 10000, stdin);
   shmdt(shm);
+  int file = open("story.txt", O_WRONLY);
+  printf("hola\n");
+  printf(file, "%s", shm);
+  dprintf(file, "%s", shm);
   return 0;
 }

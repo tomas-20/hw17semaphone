@@ -9,6 +9,9 @@ int main(int argc, char *argv[]) {
     if (!strcmp(argv[1], "create")) {
       int shmid = shmget(2187, sizeof (char[10000]), IPC_CREAT | IPC_RMID | 0640);
       printf("created shared memory %d\n", shmid);
+      char *shm = shmat(shmid, NULL, 0);
+      *shm = '\0';
+      shmdt(shm);
     }
     else if (!strcmp(argv[1], "remove")) {
       int shmid = shmget(2187, sizeof (int), 0);

@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
       printf("created story.txt\n");
     }
     else if (!strcmp(argv[1], "remove")) {
-      int shmid = shmget(2187, sizeof (int), 0);
+      int shmid = shmget(2187, 0, 0);
       shmctl(shmid, IPC_RMID, 0);
       printf("removed shared memory %d\n", shmid);
       printf("contents of story:\n");

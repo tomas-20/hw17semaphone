@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <stdio.h>
 
 int main() {
@@ -10,10 +11,9 @@ int main() {
   char *shm = shmat(shmid, NULL, 0);
   printf("the last line was:\n%syou are adding:\n", shm);
   fgets(shm, 10000, stdin);
-  shmdt(shm);
-  int file = open("story.txt", O_WRONLY);
-  printf("hola\n");
-  printf(file, "%s", shm);
+  int file = open("story.txt", O_WRONLY | O_APPEND);
   dprintf(file, "%s", shm);
+  close(file);
+  shmdt(shm);
   return 0;
 }

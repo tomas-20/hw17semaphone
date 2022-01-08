@@ -7,6 +7,11 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
+void create_file(char *path) {
+  int file = open(path, O_CREAT | O_TRUNC, 0644);
+  close(file);
+}
+
 int get_file_size(char *path) {
   struct stat file_stats;
   stat(path, &file_stats);
@@ -31,9 +36,8 @@ int main(int argc, char **argv) {
       char *shm = shmat(shmid, NULL, 0);
       *shm = '\0';
       shmdt(shm);
-      int file = open("story.txt", O_CREAT | O_TRUNC, 0644);
+      create_file("story.txt");
       printf("created story.txt\n");
-      close(file);
     }
     else if (!strcmp(argv[1], "remove")) {
       int shmid = shmget(2187, sizeof (int), 0);

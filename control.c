@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 void create_shm_string(int key, int length) {
-  int shmid = shmget(key, sizeof (char[length + 1]), IPC_CREAT | IPC_RMID | 0644);
+  int shmid = shmget(key, sizeof (char[length + 1]), IPC_CREAT | 0644);
   char *shm = shmat(shmid, NULL, 0);
   *shm = '\0';
   shmdt(shm);

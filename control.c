@@ -1,6 +1,7 @@
 #include <sys/shm.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
+#include <sys/sem.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -13,6 +14,14 @@ void create_shm_string(int key, int length) {
   *shm = '\0';
   shmdt(shm);
   printf("created shared memory %d\n", shmid);
+}
+
+void create_sem(int key) {
+  int semid = semget(key, 1, IPC_CREAT | 0644);
+  union semun su;
+  su.val = 1;
+  semctl(semid, 0, SETVAL, su);
+  printf("created semaphore %d\n", semid);
 }
 
 void create_file(char *path) {
@@ -33,6 +42,12 @@ void remove_shm(int key) {
   printf("removed shared memory %d\n", shmid);
 }
 
+void remove_sem(int key) {
+  int semid = semget(key, 1, 0);
+  semctl(semid, 0, IPC_RMID);
+  printf("removed semaphore %d\n", semid);
+}
+
 void print_file(char *path) {
   int file_size = get_file_size(path);
   char string[file_size + 1];
@@ -47,10 +62,12 @@ int main(int argc, char **argv) {
   if (argc >= 2) {
     if (!strcmp(argv[1], "create")) {
       create_shm_string(2187, 10000);
+      create_sem(24601);
       create_file("story.txt");
     }
     else if (!strcmp(argv[1], "remove")) {
       remove_shm(2187);
+      remove_sem(24601);
       print_file("story.txt");
     }
   }
